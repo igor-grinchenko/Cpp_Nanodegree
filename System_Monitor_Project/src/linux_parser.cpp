@@ -258,6 +258,7 @@ string LinuxParser::Command(int pid) {
 // DONE: Read and return the memory used by a process
 string LinuxParser::Ram(int pid) {
   string key, val, line;
+  int vmSize;
   std::ifstream stream(kProcDirectory + std::to_string(pid) + kStatusFilename);
   if (stream.is_open()) {
     while(std::getline(stream, line))
@@ -267,7 +268,9 @@ string LinuxParser::Ram(int pid) {
       // VmSize is the sum of all mapped memory
       if (key == "VmSize:"){
         // needs to be converted from kB to MB
-        return std::to_string(std::stoi(val) / 1024);
+        vmSize = std::stoi(val);
+        vmSize = (vmSize == 0) ? 0 : (vmSize / 1024);
+        return std::to_string(vmSize);
       }
     }
   }
@@ -317,6 +320,7 @@ return "error";
 // returning uptime in seconds
 long LinuxParser::UpTime(int pid) { 
   string line, val;
+  long _uptime;
   std::ifstream stream(kProcDirectory + std::to_string(pid) + kStatFilename);
   if (stream.is_open()) {
     std::getline(stream, line);
@@ -324,7 +328,9 @@ long LinuxParser::UpTime(int pid) {
     for (int i = 0; i < 22; i++){
       linestream >> val;
     }
-    return std::stol(val) / sysconf(_SC_CLK_TCK);
+    _uptime = std::stol(val);
+    _uptime = (_uptime == 0) ? 0 : (_uptime / sysconf(_SC_CLK_TCK));
+    return _uptime;
   }
 return 0; 
 }

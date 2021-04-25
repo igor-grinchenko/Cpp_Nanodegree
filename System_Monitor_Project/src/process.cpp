@@ -17,10 +17,11 @@ int Process::Pid() { return pid; }
 // DONE: Return this process's CPU utilization
 float Process::CpuUtilization() { 
     long elapsedTime = LinuxParser::UpTime() - LinuxParser::UpTime(pid);    // in seconds
-    long activeTime = LinuxParser::ActiveJiffies(pid) / sysconf(_SC_CLK_TCK);    // in seconds
-    
-    return (activeTime / elapsedTime) * 100; 
-    }
+    long _activeJiffies = LinuxParser::ActiveJiffies(pid);
+    long activeTime = (_activeJiffies == 0) ? 0 : (_activeJiffies / sysconf(_SC_CLK_TCK));    // in seconds
+    float retVal = (activeTime == 0) ? 0 : ((activeTime / elapsedTime) * 100);
+    return retVal; 
+}
 
 // DONE: Return the command that generated this process
 string Process::Command() { return LinuxParser::Command(pid); }
