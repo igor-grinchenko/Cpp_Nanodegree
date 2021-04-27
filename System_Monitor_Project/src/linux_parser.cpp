@@ -72,7 +72,7 @@ float LinuxParser::MemoryUtilization() {
   float retVal = 0.f;
   float MemTotal = 0.f;
   float MemFree = 0.f;
-  string line, key, val;
+  string line, key, val, val2;
   int dataCounter = 0;
   std::ifstream stream(kProcDirectory + kMeminfoFilename);
   if (stream.is_open()) {
@@ -84,9 +84,9 @@ float LinuxParser::MemoryUtilization() {
           MemTotal = std::stof(val);
           dataCounter++;
         }
-        if (key == "MemFree:"){
-          linestream >> val;
-          MemFree = std::stof(val);
+        else if (key == "MemFree:"){
+          linestream >> val2;
+          MemFree = std::stof(val2);
           dataCounter++;
         }
         if (dataCounter == 2){
@@ -108,7 +108,7 @@ long LinuxParser::UpTime() {
     std::getline(stream, line);
     std::istringstream linestream(line);
     linestream >> sysUptime;
-    return std::stol(sysUptime) / sysconf(_SC_CLK_TCK);
+    return std::stol(sysUptime);
   }
   return 0; 
 }
@@ -175,7 +175,7 @@ long LinuxParser::ActiveJiffies() {
       }
     }
   }
-  return retValue; 
+  return 0; 
 }
 
 // DONE: Read and return the number of idle jiffies for the system
@@ -198,7 +198,7 @@ long LinuxParser::IdleJiffies() {
       }
     }
   }
-  return retValue; 
+  return 0; 
 }
 
 // DONE: Read and return CPU utilization
@@ -332,13 +332,14 @@ long LinuxParser::UpTime(int pid) {
   string line, val, temp;
   std::ifstream stream(kProcDirectory + std::to_string(pid) + kStatFilename);
   if (stream.is_open()) {
-    std::getline(stream, line);
-    std::istringstream linestream(line);
-    for (int i = 0; i < 21; i++){
-      linestream >> temp;
+    while (std::getline(stream, line)) {
+      std::istringstream linestream(line);
+      for (int i = 0; i < 21; i++){
+        linestream >> temp;
+      }
+      linestream >> val;
+      return UpTime() - (std::stol(val) / sysconf(_SC_CLK_TCK));
     }
-    linestream >> val;
-    return std::stol(val) / sysconf(_SC_CLK_TCK);
-  }
+  }  
   return 0; 
 }
