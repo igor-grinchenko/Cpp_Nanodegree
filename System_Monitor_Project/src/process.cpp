@@ -18,11 +18,9 @@ int Process::Pid() { return pid; }
 
 // DONE: Return this process's CPU utilization
 float Process::CpuUtilization() { 
-    long elapsedTime = LinuxParser::UpTime() - LinuxParser::UpTime(pid);    // in seconds
-    long _activeJiffies = LinuxParser::ActiveJiffies(pid);
-    long activeTime = (_activeJiffies == 0) ? 0 : (_activeJiffies / sysconf(_SC_CLK_TCK));    // in seconds
-    float retVal = (activeTime == 0) ? 0 : ((activeTime / elapsedTime) * 100);
-    return retVal; 
+    float _elapsedTime = float(LinuxParser::UpTime() - LinuxParser::UpTime(pid));    // in seconds
+    float _activeJiffies = float(LinuxParser::ActiveJiffies(pid) / sysconf(_SC_CLK_TCK));
+    return _elapsedTime / _activeJiffies; 
 }
 
 // DONE: Return the command that generated this process
