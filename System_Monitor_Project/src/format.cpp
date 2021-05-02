@@ -10,7 +10,7 @@ using std::string;
 // INPUT: Long int measuring seconds
 // OUTPUT: HH:MM:SS
 string Format::ElapsedTime(long seconds) { 
-    if (seconds == 0) return "bad data";
+    if (seconds == 0) return "N/A";
     long hours = seconds/HOUR;
     long remSeconds = seconds % HOUR;
     long minutes = (remSeconds != 0) ? (remSeconds/MINUTE) : 0;

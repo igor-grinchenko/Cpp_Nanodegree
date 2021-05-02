@@ -14,16 +14,23 @@ using std::size_t;
 using std::string;
 using std::vector;
 
+
+
 // DONE: Return the system's CPU
 Processor& System::Cpu() { return cpu_; }
 
 // DONE: Return a container composed of the system's processes
 vector<Process>& System::Processes() { 
-    vector <int> PID = LinuxParser::Pids();
-    for (int i : PID){
-        processes_.push_back(Process(i));
+    const vector <int> &pids = LinuxParser::Pids();
+    for (const int &pid : pids){
+      Process new_process(pid);
+      if(new_process.Command()=="" || new_process.Ram()=="N/A"){
+        continue;
+      }
+      else {
+         processes_.emplace_back(new_process);
+      }
     }
-    std::sort(processes_.begin(), processes_.end());
 return processes_; 
 }
 

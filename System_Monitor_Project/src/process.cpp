@@ -36,4 +36,4 @@ string Process::User() { return LinuxParser::User(Pid()); }
 long int Process::UpTime() { return LinuxParser::UpTime(Pid()); }
 
 // DONE: Overload the "less than" comparison operator for Process objects
-bool Process::operator<(Process const& a) const { return LinuxParser::Ram(pid) > LinuxParser::Ram(a.pid); }
+bool Process::operator<(Process const& a) const { return LinuxParser::Ram(pid) < LinuxParser::Ram(a.pid); }

@@ -288,7 +288,7 @@ string LinuxParser::Ram(int pid) {
       }
     }
   }
-  return "error";
+  return "N/A";
 }
 
 // DONE: Read and return the user ID associated with a process
@@ -306,7 +306,7 @@ string LinuxParser::Uid(int pid) {
       }
     }
   }
-  return "error";
+  return "N/A";
 }
 
 // DONE: Read and return the user associated with a process
@@ -324,7 +324,7 @@ string LinuxParser::User(int pid) {
         }
       }
   }
-  return "error"; 
+  return "N/A"; 
 }
 
 // DONE: Read and return the uptime of a process (in seconds)
